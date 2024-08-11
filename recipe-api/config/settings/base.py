@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django_filters',
     'drf_spectacular',
     'django_rest_passwordreset',
+    'celery',
     'django_celery_beat',
     
     # Local apps

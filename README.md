@@ -10,7 +10,7 @@
 ```
 cd Django_Recipe_App/Django_Recipe_App
 ```
-
+- ### Now create a .env file & copy the .env.example variables & add the values in the variables
 - Before doing these make sure Docker is installed and Docker desktop is running
 ```
 docker-compose build
@@ -22,7 +22,7 @@ docker-compose up
 - Once the containers are running, you'll need to apply any pending migrations. Open a new terminal window and run:
 
 ```
-docker-compose exec web python manage.py migrate
+docker-compose exec web python manage.py migratee
 ```
 
 - ### Aceess the project at => http://127.0.0.1:9000/

@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Create a non-root user
+RUN useradd -m celeryuser
+
 # Copy the requirements file to the working directory
 COPY requirements.txt /app/
 
@@ -22,6 +25,9 @@ COPY . /app/
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+
+# Switch to the non-root user
+USER celeryuser
 
 # Expose port 8000
 EXPOSE 8000

@@ -19,7 +19,7 @@ def send_timely_like_notifications():
     from .models import Recipe,RecipeLike;
     one_hour_ago = timezone.now()-timedelta(hours=1)
     
-    recent_likes = RecipeLike.objects.filter(created_gte=one_hour_ago);
+    recent_likes = RecipeLike.objects.filter(created__gte=one_hour_ago);
     
     author_likes = {};
     for like in recent_likes:
