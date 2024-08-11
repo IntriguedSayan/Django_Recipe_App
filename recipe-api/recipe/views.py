@@ -6,6 +6,10 @@ from rest_framework.response import Response
 from .models import Recipe, RecipeLike
 from .serializers import RecipeLikeSerializer, RecipeSerializer
 from .permissions import IsAuthorOrReadOnly
+from .helpers import get_author_email_from_recipe;
+from .tasks import send_mail_when_liked,send_mail_when_disliked;
+
+
 
 class RecipeListAPIView(generics.ListAPIView):
     """
@@ -44,22 +48,28 @@ class RecipeLikeAPIView(generics.CreateAPIView):
     """
     serializer_class = RecipeLikeSerializer
     permission_classes = (IsAuthenticated,)
-
+    
     def post(self, request, pk):
         recipe = get_object_or_404(Recipe, id=self.kwargs['pk'])
+        authorEmail = get_author_email_from_recipe(get_object_or_404(Recipe, id=self.kwargs['pk']))
         new_like, created = RecipeLike.objects.get_or_create(
             user=request.user, recipe=recipe
         )
+        # print(new_like,created);
         if created:
-            new_like.save()
-            return Response(status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+            send_mail_when_liked.delay([authorEmail]);
+            new_like.save()     
+            return Response({"message":"Recipe liked successfully"},status=status.HTTP_201_CREATED)
+        
+        return Response({"message":"Recipe is already liked by you"},status=status.HTTP_200_OK)
 
 
     def delete(self, request, pk):
         recipe = get_object_or_404(Recipe, id=self.kwargs['pk'])
+        authorEmail = get_author_email_from_recipe(get_object_or_404(Recipe, id=self.kwargs['pk']))
         like = RecipeLike.objects.filter(user=request.user, recipe=recipe)
         if like.exists():
+            send_mail_when_disliked.delay([authorEmail])
             like.delete()
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)

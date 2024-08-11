@@ -28,6 +28,7 @@ services:
     volumes:
       - .:/app
     depends_on:
+      - db
       - redis
     environment:
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
@@ -38,6 +39,7 @@ services:
     volumes:
       - .:/app
     depends_on:
+      - db
       - redis
 
   redis:

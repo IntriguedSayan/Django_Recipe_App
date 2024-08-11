@@ -25,6 +25,9 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def get_username(self, obj):
         return obj.author.username
+    
+    def get_author_email(self, obj):
+        return obj.author.email
 
     def get_category_name(self, obj):
         return obj.category.name

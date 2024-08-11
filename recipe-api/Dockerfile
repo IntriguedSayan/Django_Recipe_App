@@ -20,8 +20,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app/
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Expose port 8000
 EXPOSE 8000
