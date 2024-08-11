@@ -1,15 +1,15 @@
-from rest_framework import generics, status
+from rest_framework import generics, status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from .models import Recipe, RecipeLike
 from .serializers import RecipeLikeSerializer, RecipeSerializer
 from .permissions import IsAuthorOrReadOnly
-from .helpers import get_author_email_from_recipe;
+from .helpers import get_author_email_from_recipe, RecipePagination;
 from .tasks import send_mail_when_liked,send_mail_when_disliked;
-
-
+       
 
 class RecipeListAPIView(generics.ListAPIView):
     """
@@ -19,7 +19,7 @@ class RecipeListAPIView(generics.ListAPIView):
     serializer_class = RecipeSerializer
     permission_classes = (AllowAny,)
     filterset_fields = ('category__name', 'author__username')
-
+    pagination_class = RecipePagination
 
 class RecipeCreateAPIView(generics.CreateAPIView):
     """

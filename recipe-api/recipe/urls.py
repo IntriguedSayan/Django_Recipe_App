@@ -11,3 +11,8 @@ urlpatterns = [
     path('<int:pk>/like/', views.RecipeLikeAPIView.as_view(),
          name='recipe-like'),
 ]
+
+
+
+
+
