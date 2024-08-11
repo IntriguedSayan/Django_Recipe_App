@@ -1,1 +1,1 @@
-from .tasks import send_mail_when_liked
+from .tasks import send_mail_when_liked, send_mail_when_disliked,  send_timely_like_notifications
