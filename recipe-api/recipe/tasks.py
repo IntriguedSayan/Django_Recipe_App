@@ -2,7 +2,6 @@ from celery import shared_task;
 from django.core.mail import send_mail;
 from django.utils import timezone;
 from datetime import timedelta;
-from .models import Recipe,RecipeLike;
 
 
 @shared_task
@@ -17,6 +16,7 @@ def send_mail_when_disliked(sendToList):
 
 @shared_task
 def send_timely_like_notifications():
+    from .models import Recipe,RecipeLike;
     one_hour_ago = timezone.now()-timedelta(hours=1)
     
     recent_likes = RecipeLike.objects.filter(created_gte=one_hour_ago);
