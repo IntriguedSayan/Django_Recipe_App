@@ -17,9 +17,9 @@ def send_mail_when_disliked(sendToList):
 @shared_task
 def send_timely_like_notifications():
     from .models import Recipe,RecipeLike;
-    one_hour_ago = timezone.now()-timedelta(hours=1)
+    one_day_ago = timezone.now() - timedelta(days=1)
     
-    recent_likes = RecipeLike.objects.filter(created__gte=one_hour_ago);
+    recent_likes = RecipeLike.objects.filter(created__gte=one_day_ago);
     
     author_likes = {};
     for like in recent_likes:
