@@ -7,7 +7,6 @@ from .models import Recipe, RecipeLike
 from .serializers import RecipeLikeSerializer, RecipeSerializer
 from .permissions import IsAuthorOrReadOnly
 
-
 class RecipeListAPIView(generics.ListAPIView):
     """
     Get: a collection of recipes
@@ -49,11 +48,13 @@ class RecipeLikeAPIView(generics.CreateAPIView):
     def post(self, request, pk):
         recipe = get_object_or_404(Recipe, id=self.kwargs['pk'])
         new_like, created = RecipeLike.objects.get_or_create(
-            user=request.user, recipe=recipe)
+            user=request.user, recipe=recipe
+        )
         if created:
             new_like.save()
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
     def delete(self, request, pk):
         recipe = get_object_or_404(Recipe, id=self.kwargs['pk'])

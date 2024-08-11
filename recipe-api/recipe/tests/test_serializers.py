@@ -3,22 +3,28 @@ from django.urls import reverse;
 from rest_framework import status;
 from rest_framework.test import APIClient;
 from recipe.models import Recipe, RecipeCategory, RecipeLike;
-from django.contrib.auth.models import User;
+from django.contrib.auth import get_user_model;
+
+User = get_user_model();
+
+@pytest.fixture
+def user():
+    return User.objects.create_user(username="testuser", password="testpassword",email="testemail");
 
 @pytest.fixture
 def api_client():
     return APIClient();
 
 @pytest.fixture
-def user():
-    return User.objects.create_user(username="testuser", password="testpassword");
+def recipe_category():
+    return RecipeCategory.objects.create(name="Test Recipe Category");
 
 @pytest.fixture
 def recipe(user, recipe_category):
     return Recipe.objects.create(
         title = "Test Recipe",
         desc = "Test Description",
-        cook_time = "30 minutes",
+        cook_time = "00:30:00",
         ingredients = "Test Ingredients",
         procedure = "Test Procedure",
         author = user,
@@ -26,12 +32,14 @@ def recipe(user, recipe_category):
     );
 
 @pytest.fixture
-class TestRecipeListAPIView:
-    def test_list_recipes(self, api_client, recipe):
+def list_recipes(api_client, recipe):
         url = reverse("recipe-list");
         response = api_client.get(url);
         assert response.status_code == status.HTTP_200_OK;
         assert len(response.data) == 1;
+class TestRecipeListAPIView:
+    def test_list_recipes(self,list_recipes,recipe):
+        return list_recipes(api_client,recipe);
 
 @pytest.mark.django_db
 class TestRecipeCreateAPIView:
